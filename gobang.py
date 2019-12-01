@@ -36,7 +36,7 @@ class one_pos():
 				if pos_dic[self.neighbor_pos[i]].occupied==occupied:
 					dt_x=self.neighbor_pos[i][0]-self.pos_x
 					dt_y=self.neighbor_pos[i][1]-self.pos_y
-					for j in range(2,max(game_size[1],game_size[1])):
+					for j in range(2,max(game_size[0],game_size[1])):
 						temp_pos=(self.pos_x+j*dt_x,self.pos_y+j*dt_y)
 						if temp_pos[0]<0 or temp_pos[0]>=game_size[0] or temp_pos[1]<0 or temp_pos[1]>=game_size[1]:
 							break 
