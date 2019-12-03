@@ -203,7 +203,7 @@ def AI_choice(turn,depth):
 	s_choice=simu_choice(turn,depth)[1]
 	return s_choice
 if __name__ == "__main__":
-	DEPTH=3
+	DEPTH=2
 	for i in range(game_size[0]):
 		for j in range(game_size[1]):
 			a_pos=one_pos(i,j)
