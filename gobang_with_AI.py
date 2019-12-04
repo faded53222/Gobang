@@ -52,7 +52,8 @@ class one_pos():
 						break
 		for i in range(4):
 			if self.from_count[occupied-1][i]+self.from_count[occupied-1][(i+4)%8]>=4:
-				return 1
+				return occupied
+		return -1
 def draw_lines(screen):
 	for i in range(1,game_size[0]):
 		pygame.draw.aaline(screen, WHITE,(i*cube_height,0),(i*cube_height,screen_size[1]),5)
@@ -91,7 +92,10 @@ def simu_choice(turn,depth,min_lim=1000):
 		choici_keep=(-1,-1)
 		save()
 		for each in real_candidate_list.copy():
-			pos_dic[each].occupy(turn+1)
+			win_d=pos_dic[each].occupy(turn+1)
+			if win_d>0:
+				saved_list.pop()
+				return (1001,each)
 			vv=evaluate(turn)
 			if vv>maxi:
 				maxi=vv
@@ -104,7 +108,10 @@ def simu_choice(turn,depth,min_lim=1000):
 	ene_turn=(turn+1)%2
 	save()
 	for each in real_candidate_list.copy():
-		pos_dic[each].occupy(turn+1)
+		win_d=pos_dic[each].occupy(turn+1)
+		if win_d>0:
+			saved_list.pop()
+			return (1001,each)
 		for each2 in pos_dic[each].neighbor_pos:
 			if each2[0]>=0 and each2[0]<game_size[0] and each2[1]>=0 and each2[1]<game_size[1]:
 				if pos_dic[each2].occupied==0:
@@ -116,7 +123,10 @@ def simu_choice(turn,depth,min_lim=1000):
 		save()
 		min_value=1000
 		for each3 in real_candidate_list:
-			pos_dic[each3].occupy(ene_turn+1)
+			win_d2=pos_dic[each3].occupy(ene_turn+1)
+			if win_d2>0:
+				min_value=-1001
+				break
 			val2=simu_choice(turn,depth-2,min_value)[0]
 			load()
 			if val2==-1000:
@@ -174,6 +184,8 @@ def AI_choice(turn,depth):
 							labi=1
 							break
 					if labi==0:
+						if t == turn:
+							return each
 						posi_pos.append(each)
 	max_val=-1000
 	pos_keep=(-1,-1)
@@ -233,7 +245,8 @@ if __name__ == "__main__":
 				if pos_dic[pos_].occupied==0:
 					chess_vec[turn].append(pos_)
 					win_detect=pos_dic[pos_].occupy(turn+1)
-					if win_detect==1:
+					print(evaluate(1))
+					if win_detect>0:
 						print('player',turn+1,' win')
 						win_lab=1
 					turn=(turn+1)%2
